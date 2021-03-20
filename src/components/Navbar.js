@@ -12,7 +12,7 @@ class Navbar extends Component {
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    DCA Swap, HODLing your cryptos
+                    HODL: Hold On for Dear Life
                 </a>
 
                 <ul className="navbar-nav px-3">
