@@ -51,7 +51,7 @@ class App extends Component {
 
       let dcaSwapEthBalance = await web3.eth.getBalance(dcaData.address)
       console.log('DCA swap ETH:', dcaSwapEthBalance.toString())
-      let rate = await dcaSwap.methods.rate.call()
+      let rate = await dcaSwap.methods.rate.call().call()
       this.setState({ rate: rate.toString() })
       console.log('rate', rate.toString())
 
