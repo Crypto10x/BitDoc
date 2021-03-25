@@ -25,3 +25,15 @@ truffle console
 truffle migrate --reset
 
 ```
+# timelock contracts
+https://www.toptal.com/ethereum-smart-contract/time-locked-wallet-truffle-tutorial
+
+
+# scheduling, cron jobs
+https://blog.chronologic.network/how-to-prove-day-ownership-to-be-a-timenode-3dc1333c74ef
+
+
+# Openzepplin installation
+```
+npm install openzeppelin-solidity --save-dev
+```
