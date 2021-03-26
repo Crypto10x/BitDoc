@@ -36,4 +36,5 @@ https://blog.chronologic.network/how-to-prove-day-ownership-to-be-a-timenode-3dc
 # Openzepplin installation
 ```
 npm install openzeppelin-solidity --save-dev
+npm install @openzeppelin/contracts@2.5.1
 ```
