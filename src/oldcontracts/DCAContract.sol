@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 // We might need contract  factories to contract array for each user
 contract DCAContracts {
+    
     //general variables
     uint256 public createdAt;
     address public owner = msg.sender; //owner of the contract
@@ -26,7 +27,7 @@ contract DCAContracts {
     mapping(uint => Transactions) public trans;
     struct Transactions {
         uint _id;
-        uint dollarSize;   
+        uint usdSize;   
         uint tokenReceived;  
         bool success; // fail if deposit not enough
         uint buyTime;
@@ -42,18 +43,18 @@ contract DCAContracts {
 constructor(
         uint256 _startDcaTime,
         uint256 _endDcaTime,
-        uint256 _dollarSize,
+        uint256 _usdSize,
         uint256 _initial_deposit,
         uint256 _frequencyDays
     ) public {
         // add required stuff
-        token = ERC20("BTC token address");
-        usd = ERC20("USD token address");
+        // token = ERC20("BTC token address");
+        // usd = ERC20("USD token address");
         owner = msg.sender;
         createdAt = block.timestamp;
 
         // dca setting
-        dollarSize = _dollarSize; //size per transaction
+        usdSize = _usdSize; //size per transaction
         startDcaTime = _startDcaTime; //start of the contract
         endDcaTime =_endDcaTime;
         frequencyDays =_frequencyDays;
@@ -63,21 +64,49 @@ constructor(
         usdBalance = _initial_deposit;
         
         //call buy btc first time too
- 
     }
+
+    function init(
+        uint256 _startDcaTime,
+        uint256 _endDcaTime,
+        uint256 _usdSize,
+        uint256 _initial_deposit,
+        uint256 _frequencyDays
+        
+    ) public {
+        // add required stuff
+        // token = ERC20("BTC token address");
+        // usd = ERC20("USD token address");
+        owner = msg.sender;
+        createdAt = block.timestamp;
+
+        // dca setting
+        usdSize = _usdSize; //size per transaction
+        startDcaTime = _startDcaTime; //start of the contract
+        endDcaTime =_endDcaTime;
+        frequencyDays =_frequencyDays;
+        //time lock setting
+        depositTime =_startDcaTime;
+        unlockTime =_endDcaTime;
+        usdBalance = _initial_deposit;
+        
+        //call buy btc first time too
+    }
+
+
     function buyBtc() public{
        // buy btc function 1st time in construct 
         //get btc rate
         uint usdtoken = getBtcRate();
 
-        tokenAmount = dollarSize / usdtoken;
+        uint tokenAmount = usdSize / usdtoken;
         
         //buy btc from exchange
-        Transaction storage t = trans[buyCount];
+        Transactions storage t = trans[buyCount];
 
         buyCount +=1;
         tokenBalance +=tokenAmount;
-        usdBalance -= _dollarSize;
+        usdBalance -= _usdSize;
         
 
     }   

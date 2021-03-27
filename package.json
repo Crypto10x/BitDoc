@@ -4,6 +4,7 @@
   "description": "Automate DCA tools for ERC-20 Cryptocurrency",
   "author": "poom_tanawat@hotmail.com",
   "dependencies": {
+    "@truffle/hdwallet-provider": "^1.2.3",
     "babel-polyfill": "6.26.0",
     "babel-preset-env": "1.7.0",
     "babel-preset-es2015": "6.24.1",
@@ -14,6 +15,7 @@
     "chai": "4.2.0",
     "chai-as-promised": "7.1.1",
     "chai-bignumber": "3.0.0",
+    "dotenv": "^8.2.0",
     "identicon.js": "^2.3.3",
     "react": "16.8.4",
     "react-bootstrap": "^1.5.2",
@@ -38,6 +40,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@openzeppelin/contracts": "^2.5.1"
+    "@openzeppelin/contracts": "^2.5.1",
+    "truffle-plugin-verify": "^0.5.7"
   }
 }

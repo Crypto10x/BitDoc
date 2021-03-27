@@ -38,3 +38,16 @@ https://blog.chronologic.network/how-to-prove-day-ownership-to-be-a-timenode-3dc
 npm install openzeppelin-solidity --save-dev
 npm install @openzeppelin/contracts@2.5.1
 ```
+
+# deployment code
+```
+truffle develop
+truffle migrate --network rinkeby
+npm install truffle-hdwallet-provider-privkey@web3-one
+```
+
+
+# fork main net
+```
+npm install -g ganache-cli
+```

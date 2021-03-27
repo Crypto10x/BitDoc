@@ -2,7 +2,7 @@ pragma solidity ^0.5.0;
 
 import "./MockBTC.sol";
 import "./MockDAI.sol";
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v2.5.0/contracts/math/SafeMath.sol";
+// import "./SafeMath.sol";
 
 contract BTCExchange {
     using SafeMath for uint;
@@ -29,8 +29,9 @@ contract BTCExchange {
     constructor(uint _mint_vol,MockBTC _btc, MockDAI _dai) public {
         btc =_btc;
         dai =_dai;
-        btc.mint(_mint_vol);
-        rate = 5;  //USDT/BTC
+        
+        // btc.mint(_mint_vol);
+        rate = 5+_mint_vol;  //USDT/BTC
 
     }
     
@@ -58,7 +59,8 @@ contract BTCExchange {
 
     }
     function mintBTC(uint _amount) public{
-        btc.mint(_amount);
+        // btc.mint(_amount);
+
     }
     
     function checkBTC() public view returns (uint) {
