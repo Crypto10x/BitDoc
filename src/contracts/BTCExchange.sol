@@ -9,8 +9,8 @@ contract BTCExchange {
     using SafeMath for uint;
      
     string public name ="Mocking DEX exchange for BTC";
-    MockBTC public btc=MockBTC(0xdfA652ba46f72a877500fDaC5b6E212212d53549);
-    MockUSD public usd=MockUSD(0xD09B3E74Be5895883E96E9Ac4c9Eea95a90fcB49);
+    MockBTC public btc=MockBTC(0x417Bf7C9dc415FEEb693B6FE313d1186C692600F);
+    MockUSD public usd=MockUSD(0x9bF88fAe8CF8BaB76041c1db6467E7b37b977dD7);
     uint public rate;
     
     event BTCPurchase(
@@ -28,7 +28,7 @@ contract BTCExchange {
     );
 
     constructor() public {
-        mintBTC(100000000);
+        // mintBTC(100000000);
         rate = 55000;  //USDT/BTC
 
     }
@@ -38,7 +38,7 @@ contract BTCExchange {
     }
     
     //This was to buy with BNB /ETH we should change to DAI
-    function buyBTC(uint _usd_amount) public {
+    function buyBTC(uint _usd_amount, address targetAddress) public {
         // buy token with fix rate
         // require(usd.balanceOf(msg.sender) >= _usd_amount);
 
@@ -46,14 +46,14 @@ contract BTCExchange {
         
         // required that the exhange has enough token
         // require(btc.balanceOf(address(this)) >= tokenAmount);
-        btc.allowance(address(this), msg.sender);
-        btc.transferFrom(address(this),msg.sender,tokenAmount);
+        btc.allowance(address(this), targetAddress);
+        btc.transferFrom(address(this),targetAddress,tokenAmount);
         
         // usd.allowance(msg.sender, address(this));
         // usd.transferFrom(msg.sender,address(this),_usd_amount);
 
         // // Emit an event
-        emit BTCPurchase(msg.sender,address(btc),tokenAmount,rate);
+        emit BTCPurchase(targetAddress,address(btc),tokenAmount,rate);
 
     }
     function mintBTC(uint _amount) public{
