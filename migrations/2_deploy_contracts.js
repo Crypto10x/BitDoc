@@ -1,3 +1,4 @@
+// const DCAToken = artifacts.require("DCAToken");
 const TestToken = artifacts.require("TestToken");
 // const MockBTC =artifacts.require("MockBTC");
 // const MockDai =artifacts.require("MockDai");

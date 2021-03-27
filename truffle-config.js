@@ -1,7 +1,8 @@
 require('babel-register');
 require('babel-polyfill');
 const HDWalletProvider = require("@truffle/hdwallet-provider");
-const privKeys = process.env.PRIVATE_KEY
+// const privKeys = `${process.env.PRIVATE_KEY}`
+
 module.exports = {
   networks: {
     development: {
@@ -16,10 +17,17 @@ module.exports = {
       network_id: 4,
       gas: 9000000,
       gasPrice: 10000000000,
-    }
+    },
+    // bsctestnet: {
+    //   provider: () => new HDWalletProvider(privKeys, `https://data-seed-prebsc-1-s1.binance.org:8545`),
+    //   network_id: 97,
+    //   confirmations: 10,
+    //   timeoutBlocks: 200,
+    //   skipDryRun: true
+    // },
     
   },
-  contracts_directory: './src/contracts/',
+  contracts_directory: './src/test_deploy/',
   contracts_build_directory: './src/abis/',
   compilers: {
     solc: {
