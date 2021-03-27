@@ -2,7 +2,7 @@ require('babel-register');
 require('babel-polyfill');
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 // const privKeys = `${process.env.PRIVATE_KEY}`
-
+const privKeys ="9eaedfd222c230b2a7f41ad5cf52f7bd90d139f5437dc8377202666a1607f336";
 module.exports = {
   networks: {
     development: {
@@ -27,7 +27,7 @@ module.exports = {
     // },
     
   },
-  contracts_directory: './src/test_deploy/',
+  contracts_directory: './src/contracts/',
   contracts_build_directory: './src/abis/',
   compilers: {
     solc: {
