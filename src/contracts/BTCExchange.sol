@@ -2,14 +2,14 @@ pragma solidity ^0.5.0;
 
 import "./MockBTC.sol";
 import "./MockUSD.sol";
-import "./SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 // import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v2.5.0/contracts/token/ERC20/IERC20.sol";
 
 contract BTCExchange {
     using SafeMath for uint256;
-
+    MockBTC public btc;
+    MockUSD public usd;
     string public name = "Mocking DEX exchange for BTC";
     uint256 public rate;
 
@@ -23,8 +23,7 @@ contract BTCExchange {
     event BTCSold(address account, address btc, uint256 amount, uint256 rate);
 
     constructor(MockBTC _btc, MockUSD _usd) public {
-        mintBTC(1000000000);
-        rate = 55000; //USDT/BTC
+        rate = 55000;
         btc = _btc;
         usd = _usd;
     }
