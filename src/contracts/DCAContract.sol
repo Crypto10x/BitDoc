@@ -3,6 +3,7 @@ import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v2.5.0/contr
 import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v2.5.0/contracts/math/SafeMath.sol";
 import "../contracts/BTCExchange.sol";
 import '../contracts/MockBTC.sol';
+import '../contracts/MockUSD.sol';
 
 // We might need contract  factories to contract array for each user
 contract DCAContracts {
@@ -13,7 +14,6 @@ contract DCAContracts {
     // mapping(address => ERC20)  public token; //setup btc token
     // mapping(address => ERC20) public usd; //dai, usd,bnb
     // mapping(address => uint256) public tokenBalance; //BTC
-    MockBTC public token;
     mapping(address => uint256) public usdBalance;
 
     // == dca setting
@@ -26,9 +26,15 @@ contract DCAContracts {
     mapping(address => uint256) public penaltyRate;
     mapping(address => uint256) public unlockTime;
     mapping(address => uint256) public penaltyReserves;
+    address[] public orderQueue = new address[](100); // for the sake of winning hackathon
+    uint256 public count = 0;
     
-    // TODO: Create map of pending transactions
-    mapping(address => )
+    BTCExchange exchange = BTCExchange(0xcD6a42782d230D7c13A74ddec5dD140e55499Df9);
+    
+    MockBTC public btc=MockBTC(0xd9145CCE52D386f254917e481eB44e9943F39138);
+    MockUSD public usd=MockUSD(0xd8b934580fcE35a11B58C6D73aDeE468a2833fa8);
+    
+
     
     // to collect DCA transactions
     mapping(uint => Transactions) public trans;
@@ -73,6 +79,10 @@ constructor(
         //call buy btc first time too
     }
 
+    event approve_amount(uint256 amount);
+    event allowance_amount(uint256 amount);
+    event transfer_amount(uint256 amount);
+
     function create(
         uint256 _startDcaTime,
         uint256 _endDcaTime,
@@ -94,56 +104,76 @@ constructor(
         //time lock setting
         depositTime[msg.sender] =_startDcaTime;
         unlockTime[msg.sender] =_endDcaTime;
-        usdBalance[msg.sender] = _initial_deposit; // add to MOCKUSD
+        // usdBalance[msg.sender] = _initial_deposit; // add to MOCKUSD
+        orderQueue[count] = msg.sender;
+        count +=1;
+        
+        emit approve_amount(_initial_deposit);
+        usd.approve(address(this), _initial_deposit);
+        emit allowance_amount(usd.allowance(address(usd), msg.sender));
+        usd.transferFrom(msg.sender,address(this), _initial_deposit);
+        emit transfer_amount(_initial_deposit);
+        // usd.mint(_initial_deposit);
+        
+        // TODO: approve usd b efore
         
         //call buy btc first time too
     }
     
     function getBalance() public view returns(uint256) {
-        return token.balanceOf(msg.sender);
+        return btc.balanceOf(msg.sender);
+    }
+    
+    function getUSDBalance() public view returns(uint256) {
+        return usd.balanceOf(msg.sender);
+    }
+    
+    
+    function getPendingOrders() public view returns(address[] memory) {
+        return orderQueue; // filter from fe, for simpl
     }
 
 
-    function buyBtc(address btcExchangeAddress) public{
-       // buy btc function 1st time in construct 
-        //get btc rate
-        uint usdtoken = getBtcRate();
+    function buyBtc(address targetAddress, uint256 idx) public{
 
-        uint tokenAmount = usdSize[msg.sender] / usdtoken;
-        
-        //buy btc from exchange
-        BTCExchange exchange = new BTCExchange();
-        exchange.buyBTC(usdSize[msg.sender]);
+        exchange.buyBTC(usdSize[targetAddress],address(this));
         // Transactions storage t = trans[buyCount];
+        delete orderQueue[idx];
 
-        buyCount[msg.sender] +=1;
+        buyCount[targetAddress] +=1;
+        
 
     }   
 
 
-    function relayerBuy(address targetAddress) public{
+    function relayerBuy(address targetAddress, uint256 idx) public{
         // recurring here or have third party execute the contracts
 
         // can add randomness within days to avoid arbitager
-         
+         buyBtc(targetAddress, idx);
+         count-=1;
 
     }
 
-    function withDrawUsd() public{
+    function withDrawUsd(uint256 _amount) public{
         // no penalty
+        usdBalance[msg.sender] -= _amount;
 
     }
 
     function depositUSD(uint256 _amount) public {
-        //cannot deposit more than planned
+        //cannot deposit more than planned TODO
         usdBalance[msg.sender] += _amount;
         
     }
 
     function withDrawBTC (uint256 _amount) public{
-        // if not enough will sell
-        usdBalance[msg.sender]-= _amount;
-
+        // TODO
+        // btBalance[msg.sender]-= _amount;
+        btc.approve(address(this), _amount);
+        btc.approve(msg.sender, _amount);
+        btc.transferFrom(address(this),msg.sender,_amount);
+    
     }
 
     event BuyBTC(
@@ -185,9 +215,6 @@ constructor(
         _;
     }
 
-    function getBtcRate() public view returns(uint256){
-        return 50000; // return rates
-    }
     
 
     // deposit ETH
